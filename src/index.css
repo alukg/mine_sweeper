@@ -1,0 +1,173 @@
+body {
+    font: 14px "Century Gothic", Futura, sans-serif;
+    background-color: #f2f1f0;
+    margin: 0;
+}
+
+ol, ul {
+    padding-left: 30px;
+}
+
+table{
+    border-spacing: 0;
+}
+
+.board-row{
+    border-spacing: 0;
+    padding: 0;
+}
+
+.board-row:after {
+    clear: both;
+    display: table;
+}
+
+.square{
+    border: none;
+    font-size: 15px;
+    font-weight: 300;
+    text-align: center;
+    box-shadow: inset 0 0 6px #f2f1f0;
+
+    height:100%;
+    width:100%;
+}
+
+.square .material-icons{
+    font-size: 13px;
+    font-weight: 300;
+    text-align: center;
+}
+
+.square-super {
+    opacity: 0.5;
+}
+
+.square-close {
+    background: #2492ff;
+}
+
+.square-close:hover {
+    background: #6fcaff;
+}
+
+.square-flag {
+    background: #d6ff9c;
+}
+
+.square-number {
+    background: #fff;
+}
+
+.square-mine {
+    background: rgba(215, 0, 6, 0.47);
+    color: #fff;
+}
+
+.kbd-navigation .square:focus {
+    background: #ddd;
+}
+
+.headline{
+    clear: both;
+    height: 30px;
+    text-align: center;
+    border-bottom: 1px solid #999;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    padding-bottom: 25px;
+    background-color: #ffffff;
+}
+
+#headline {
+    float: left;
+    margin-left: 20px;
+    font-family: 'Exo 2', sans-serif;
+    padding-top: 6px;
+}
+
+.game-board{
+    text-align: center;
+    width: 100%;
+    height: 100%;
+}
+
+.matrix{
+    display: table;
+    margin: 0 auto;
+    border-spacing: 0;
+    border-collapse: separate;
+}
+
+.game-settings {
+    height: auto;
+    float: right;
+    margin-right: 10px;
+}
+
+.game-settings div{
+    font-size: 18px;
+    float: right;
+}
+
+.game-settings .input{
+    margin: 0;
+}
+
+.inputBox {
+    font-size: 20px;
+    margin: 0 0 0 5px;
+    resize: horizontal;
+    max-width: 50px;
+    text-align: right;
+    padding-top: 0;
+}
+
+.input--isao input{
+    padding: 0;
+}
+
+td {
+    padding: 1px;
+    height: 26px;
+    width: 26px;
+}
+
+.super-mode {
+    width: 46px;
+    height: 46px;
+    margin-right: 20px;
+    border: none;
+    outline:none;
+}
+
+.info-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.on{
+    -moz-box-shadow: 0 0 40px #ffc731;
+    -webkit-box-shadow: 0 0 40px #ffc731;
+    box-shadow: 0 0 40px #ffc731;
+}
+
+#timer{
+    margin-right: 30px;
+}
+
+.game-info {
+    margin-top: 7px;
+    margin-left: 60px;
+    float: left;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.centerMe {
+    padding-top: 7px;
+    vertical-align: middle;
+    margin: 0 auto;
+}

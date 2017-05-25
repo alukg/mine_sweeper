@@ -1,0 +1,154 @@
+.centerMe {
+    float: left;
+    cursor: pointer;
+    font-size: 15px;
+    border: 0;
+    background: transparent;
+    outline: 0;
+    overflow: hidden;
+}
+.centerMe .icon {
+    margin: 0;
+    position: relative;
+    left: 6px;
+    background: #5c6065;
+    line-height: 30px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    color: #fff;
+    font-size: 18px;
+    -webkit-transition: .2s color;
+    transition: .2s color;
+    border-radius: 2px;
+}
+.centerMe .icon .fa {
+    width: 30px;
+    -webkit-transition: .2s all;
+    transition: .2s all;
+    -webkit-transform: translateY(3px);
+    transform: translateY(3px);
+}
+.centerMe .icon .fa-check {
+    color: #38b87c;
+}
+.centerMe .icon .fa-question {
+    color: #f34541;
+}
+.centerMe .icon:after {
+    content: ' ';
+    display: block;
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    background: #5c6065;
+    top: 12.5px;
+    right: 1px;
+    -webkit-transition: .2s right;
+    transition: .2s right;
+    z-index: 1;
+}
+.centerMe .text {
+    font-size: 16px;
+    position: relative;
+    width: 120px;
+    height: 30px;
+    overflow: hidden;
+    font-family: "Roboto", sans-serif;
+    background: #2492ff;
+    text-align: center;
+    line-height: 30px;
+    color: #fff;
+    font-weight: 300;
+    -webkit-transition: .2s all;
+    transition: .2s all;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+.centerMe .text span {
+    width: 100%;
+    opacity: 1;
+    top: 0;
+    font-weight: 400;
+    text-shadow: 1px 1px #7c7f7e;
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    -webkit-transition: .3s all;
+    transition: .3s all;
+}
+.centerMe:hover .icon {
+    color: #2492ff;
+    border-radius: 2px 0 0 2px;
+}
+.centerMe:hover .icon:after {
+    right: -2px;
+}
+.centerMe:hover .text {
+    width: 120px;
+}
+.centerMe.confirm .icon {
+    border-radius: 2px 0 0 2px;
+}
+.centerMe.confirm .icon .fa {
+    -webkit-transform: translateY(-30px);
+    transform: translateY(-30px);
+}
+.centerMe.confirm .icon:after {
+    right: -2px;
+}
+.centerMe.confirm .text {
+    background: #f34541;
+    width: 120px;
+}
+.centerMe.confirm .text span {
+    opacity: 1;
+    top: 0;
+}
+.centerMe.done .icon {
+    border-radius: 2px 0 0 2px;
+}
+.centerMe.done .icon .fa {
+    -webkit-transform: translateY(-62px);
+    transform: translateY(-62px);
+}
+.centerMe.done .icon:after {
+    right: -2px;
+}
+.centerMe.done .text {
+    background: #38B87C;
+    width: 120px;
+}
+.centerMe.done .text span {
+    opacity: 1;
+    top: 0;
+}
+
+@-webkit-keyframes fadeInZoom {
+    0% {
+        opacity: 0;
+        -webkit-transform: scale(0.7);
+        transform: scale(0.7);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeInZoom {
+    0% {
+        opacity: 0;
+        -webkit-transform: scale(0.7);
+        transform: scale(0.7);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
