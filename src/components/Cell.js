@@ -1,68 +1,63 @@
 import React from 'react';
-import {Mine,Flag,Open,Close,Empty} from '../constants/constants'
+import {Mine,Flag,Open,Close} from '../constants/constants'
+
+import {isEqual} from "lodash";
+
+import flag_icon from '../images/flag.png';
+import sea_mine from '../images/sea_mine.png';
 
 class Cell extends React.Component {
     render() {
-        let square;
-        if (this.props.super) {
-            if (this.props.value === Mine) {
-                if (this.props.state === Flag)
-                    square = <div className="square square-flag square-super">
-                        <button className="square square-button square-flag square-super" onClick={this.props.onClick}><i
-                            className="material-icons">my_location</i></button>
-                    </div>;
+        let divClassName = "square";
+        let value;
+        if (this.props.super) { // if i'm on super mode
+            if (isEqual(this.props.value,Mine)) {
+                value = <img className="info-cell-icon" src={sea_mine}/>;
+                if (isEqual(this.props.position,Flag))
+                    divClassName += " square-flag";
                 else
-                    square = <div className="square square-mine square-super">
-                        <button className="square square-button square-mine square-super" onClick={this.props.onClick}><i
-                            className="material-icons">my_location</i></button>
-                    </div>;
+                    divClassName += " square-mine";
+                divClassName += " square-super";
             }
-            else if (this.props.state === Open)
-                square = <div className="square square-number">
-                    <button className="square square-button square-number"
-                            onClick={this.props.onClick}>{this.props.value}</button>
-                </div>;
-            else if (this.props.state === Flag)
-                square = <div className="square square-flag square-super">
-                    <button className="square square-button square-flag square-super"
-                            onClick={this.props.onClick}>{this.props.value}</button>
-                </div>;
-            else
-                square = <div className="square square-close square-super">
-                    <button className="square square-button square-close square-super"
-                            onClick={this.props.onClick}>{this.props.value}</button>
-                </div>;
+            else {
+                value = this.props.value;
+                if (isEqual(this.props.position, Open))
+                    divClassName += " square-number";
+                else if (isEqual(this.props.position, Flag))
+                    divClassName += " square-flag square-super";
+                else
+                    divClassName += " square-close square-super";
+            }
         }
         else {
-            if (this.props.state === Close)
-                square = <div className="square square-close">
-                    <button className="square square-button square-close" onClick={this.props.onClick}></button>
-                </div>;
-            else if (this.props.state === Flag)
-                square = <div className="square square-flag">
-                    <button className="square square-button square-flag" onClick={this.props.onClick}><i
-                        className="material-icons">flag</i></button>
-                </div>;
+            if (isEqual(this.props.position,Close))
+                divClassName += " square-close";
+            else if (isEqual(this.props.position,Flag)) {
+                divClassName += " square-flag";
+                value = <img className="info-cell-icon" src={flag_icon}/>;
+            }
             else {
-                if (this.props.value === Mine)
+                if (isEqual(this.props.value,Mine)) {
+                    value = <img className="info-cell-icon" src={sea_mine}/>;
                     if (this.props.winStatus)
-                        square = <div className="square square-flag">
-                            <button className="square square-button square-flag" onClick={this.props.onClick}><i
-                                className="material-icons">my_location</i></button>
-                        </div>;
+                        divClassName += " square-flag";
                     else
-                        square = <div className="square square-mine">
-                            <button className="square square-button square-mine" onClick={this.props.onClick}><i
-                                className="material-icons">my_location</i></button>
-                        </div>;
+                        divClassName += " square-mine";
+                }
+                else {
+                    value = this.props.value;
+                    divClassName += " square-number";
+                }
 
-                else
-                    square = <div className="square square-number">
-                        <button className="square square-button square-number"
-                                onClick={this.props.onClick}>{this.props.value}</button>
-                    </div>;
             }
         }
+
+        let buttonClassName = divClassName + " square-button";
+        let square = <div className={divClassName}>
+                        <button className={buttonClassName}
+                        onClick={this.props.onClick}>{value}</button>
+                    </div>;
+
         return (square);
     }
 }

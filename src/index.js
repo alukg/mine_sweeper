@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import 'lodash/isEqual';
 
 import InputBox from './components/InputBox';
 import Board from './components/Board';
@@ -8,8 +9,6 @@ import Board from './components/Board';
 import './index.css';
 import './css/startButton.css'
 import './css/inputStyle.css'
-import './scripts/startButton.js'
-import './scripts/scripts.js'
 import superman_icon from './images/Superman.png';
 
 class Game extends React.Component {
@@ -73,3 +72,36 @@ ReactDOM.render(
     <Game />,
     document.getElementById('root')
 );
+
+let $startButton = $(".centerMe");
+
+$startButton.click(function(){
+    if($(this).hasClass("confirm")){
+        $(this).addClass("done");
+        $(".centerMe span").text("Starting");
+        setTimeout(function(){
+            $(".centerMe").removeClass("confirm").removeClass("done");
+            $(".centerMe span").text("New Game");
+        }, 1200);
+    } else if(!$(this).hasClass("done")) {
+        $(this).addClass("confirm");
+        $(".centerMe span").text("Are you sure?");
+    }
+});
+
+// Reset
+$startButton.on('mouseout', function(){
+    if($(this).hasClass("confirm")){
+        setTimeout(function(){
+            $(".centerMe").removeClass("confirm").removeClass("done");
+            $(".centerMe span").text("New Game");
+        }, 3000);
+    }
+});
+
+$(".super-mode").click(function () {
+    if($(this).hasClass("off"))
+        $(this).removeClass("off").addClass("on");
+    else
+        $(this).removeClass("on").addClass("off");
+});

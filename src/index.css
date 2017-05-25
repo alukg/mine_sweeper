@@ -60,7 +60,7 @@ table{
 }
 
 .square-mine {
-    background: rgba(215, 0, 6, 0.47);
+    background: rgb(242, 151, 158);
     color: #fff;
 }
 
@@ -147,6 +147,11 @@ td {
 .info-icon {
     width: 30px;
     height: 30px;
+}
+
+.info-cell-icon{
+    height: 14px;
+    width: 14px;
 }
 
 .on{

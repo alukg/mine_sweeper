@@ -1,5 +1,5 @@
 export const Mine = "m";
-export const Empty = " ";
+export const Empty = "";
 
 export const Close = "c";
 export const Open = "o";

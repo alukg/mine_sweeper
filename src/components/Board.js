@@ -1,6 +1,8 @@
 import React from 'react';
 import $ from 'jquery';
 
+import {isEqual} from "lodash";
+
 import Timer from './Timer';
 import Cell from './Cell';
 import {Mine,Flag,Open,Close,Empty} from '../constants/constants'
@@ -18,7 +20,7 @@ class Board extends React.Component {
             height: 0,
             width: 0,
             matrix: [],
-            states: [],
+            position: [],
             flags: null
         };
     }
@@ -36,49 +38,35 @@ class Board extends React.Component {
         let height = data[0];
         let width = data[1];
         this.closeCells = height*width;
-        let newMatrix = [];
-        for (let i=0;i<height;i++){
-            newMatrix.push([]);
-        }
-        for(let i=0;i<height;i++) // rows
-            for(let j=0;j<width;j++) // columns
-                newMatrix[i].push(Empty);
 
-        let states = [];
-        for (let i=0;i<height;i++){
-            states.push([]);
+        let newMatrix = [];
+        let position = [];
+        for (let i=0;i<height;i++) {
+            newMatrix.push([]);
+            position.push([]);
         }
+
         for(let i=0;i<height;i++) // rows
-            for(let j=0;j<width;j++) // columns
-                states[i].push(Close);
+            for(let j=0;j<width;j++) { // columns
+                newMatrix[i].push(Empty);
+                position[i].push(Close);
+            }
+
 
         let arr = Array.apply(null, {length: height*width}).map(Function.call, Number);
         arr.sort( function() { return 0.5 - Math.random() } );
-        for(let i=0;i<data[2];i++) {
+        for(let i=0;i<data[2];i++)
             newMatrix[Math.floor(arr[i] / width)][arr[i] % width] = Mine;
-        }
 
         let count;
         for(let i=0;i<height;i++) { // rows
             for(let j=0;j<width;j++) { // columns
                 count = 0;
                 if (newMatrix[i][j] !== Mine) {
-                    if (i+1 < height && newMatrix[i+1][j] === Mine)
-                        count++;
-                    if (i-1 >= 0 && newMatrix[i-1][j] === Mine)
-                        count++;
-                    if (j+1 < width && newMatrix[i][j+1] === Mine)
-                        count++;
-                    if (j-1 >= 0 && newMatrix[i][j-1] === Mine)
-                        count++;
-                    if (i+1 < height && j+1 < width && newMatrix[i+1][j+1] === Mine)
-                        count++;
-                    if (i+1 < height && j-1 >=0 && newMatrix[i+1][j-1] === Mine)
-                        count++;
-                    if (i-1 >= 0 && j+1 < width && newMatrix[i-1][j+1] === Mine)
-                        count++;
-                    if (i-1 >= 0 && j-1 >=0 && newMatrix[i-1][j-1] === Mine)
-                        count++;
+                    for(let row=i-1;row<=i+1;row++)
+                        for(let col=j-1;col<=j+1;col++)
+                            if((row!==i || col!==j) && row<height && col<width && row>=0 && col>=0 && newMatrix[row][col] === Mine)
+                                count++;
                     if(count !== 0)
                         newMatrix[i][j] = count;
                 }
@@ -96,88 +84,57 @@ class Board extends React.Component {
             height: height,
             width: width,
             matrix: newMatrix,
-            states: states
+            position: position
         });
         this.timer.stopTimer();
         this.timer.startTimer();
     }
 
     handleClick(e,row,column) {
-        if (this.state.states[row][column] === Close || this.state.states[row][column] === Flag) {
+        if (this.state.position[row][column] !== Open) {
             if (e.shiftKey) {
-                const states = this.state.states.slice();
+                const states = this.state.position.slice();
                 let flags = this.state.flags;
-                if (this.state.states[row][column] === Flag) {
+                if (this.state.position[row][column] === Flag) {
                     states[row][column] = Close;
                     flags--;
                 }
                 else {
                     states[row][column] = Flag;
-                    if(flags == this.state.mines) {
+                    if(isEqual(flags,this.state.mines)) {
                         alert("You have reached the maximum number of flags.");
                         return;
                     }
                     flags++;
-                    if (this.state.mines == this.closeCells && flags == this.state.mines) {
-                        for (let i = 0; i < this.state.height; i++) // rows
-                            for (let j = 0; j < this.state.width; j++) // columns
-                                states[i][j] = Open;
-                        $(function(){
-                            if($(".super-mode").hasClass("on"))
-                                $(".super-mode").removeClass("on").addClass("off");
-                        });
-                        this.timer.stopTimer();
-                        this.setState({
-                            superMode: false,
-                            states: states,
-                            flags: flags,
-                            win: true
-                        });
-                        return;
-                    }
+                    if(this.checkIfWin(states,flags)) return;
                 }
                 this.setState({
-                    states: states,
+                    position: states,
                     flags: flags
                 });
             }
             else {
-                if (this.state.states[row][column] === Close) { // if the cell is closed
-                    const states = this.state.states.slice();
-                    if (this.state.matrix[row][column] === Mine) { // if push on mine cell
+                if (this.state.position[row][column] === Close) { // if the cell is closed
+                    const position = this.state.position.slice();
+                    if (this.state.matrix[row][column] === Mine) { // if a mine cell clicked
                         for (let i = 0; i < this.state.height; i++) // rows
                             for (let j = 0; j < this.state.width; j++) // columns
-                                states[i][j] = Open;
+                                position[i][j] = Open;
                         $(function(){
                             if($(".super-mode").hasClass("on"))
                                 $(".super-mode").removeClass("on").addClass("off");
                         });
                         this.timer.stopTimer();
                         this.setState({
-                            states: states,
+                            position: position,
                             superMode: false
                         });
                     }
-                    else { // if push on non mine cell
-                        this.openCells(states, row, column);
-                        if (this.state.mines == this.closeCells && this.state.flags == this.state.mines) {
-                            for (let i = 0; i < this.state.height; i++) // rows
-                                for (let j = 0; j < this.state.width; j++) // columns
-                                    states[i][j] = Open;
-                            $(function(){
-                                if($(".super-mode").hasClass("on"))
-                                    $(".super-mode").removeClass("on").addClass("off");
-                            });
-                            this.timer.stopTimer();
-                            this.setState({
-                                superMode: false,
-                                states: states,
-                                win: true
-                            });
-                            return;
-                        }
+                    else { // if non mine cell clicked
+                        this.openCells(position, row, column);
+                        if(this.checkIfWin(position,this.state.flags)) return;
                         this.setState({
-                            states: states,
+                            position: position,
                         });
                     }
                 }
@@ -185,6 +142,30 @@ class Board extends React.Component {
         }
     }
 
+    /* check if won the game:
+     * if we have flags just and on all the mines and all other cells is open */
+    checkIfWin(position, flags){
+        if (isEqual(this.state.mines,this.closeCells) && isEqual(flags,this.state.mines)) {
+            for (let i = 0; i < this.state.height; i++) // rows
+                for (let j = 0; j < this.state.width; j++) // columns
+                    position[i][j] = Open; // open all the cells
+            $(function(){ // turn off the super mode
+                if($(".super-mode").hasClass("on"))
+                    $(".super-mode").removeClass("on").addClass("off");
+            });
+            this.timer.stopTimer();
+            this.setState({
+                superMode: false, // turn off the super mode
+                position: position,
+                flags: flags,
+                win: true
+            });
+            return true;
+        }
+        return false;
+    }
+
+    /* BFS scan of the matrix to open all the linked cells */
     openCells(arr,row,column) {
         if (this.state.matrix[row][column] === Empty){
             let height = this.state.height;
@@ -197,33 +178,32 @@ class Board extends React.Component {
                 for(let j=0;j<this.state.width;j++) // columns
                     visited[i].push(false);
 
-            // Create a queue for BFS
+            // create a queue for BFS
             let queue = [];
 
-            // Mark the current node as visited and enqueue it
+            // open that cell
             arr[row][column] = Open;
             this.closeCells--;
+
+            // mark the current cell as visited and enqueue it
             visited[row][column] = true;
             queue.push([row,column]);
 
             while(queue.length !== 0)
             {
-                // Dequeue a vertex from queue and print it
+                // dequeue a cell from queue
                 let s = queue.shift();
 
-                // Get all adjacent vertices of the dequeued vertex s
-                // If a adjacent has not been visited, then mark it visited
-                // and enqueue it
-
+                // check all the linked cell around the cell if they open
                 for(let i=s[0]-1;i<=s[0]+1;i++) {
                     for(let j=s[1]-1;j<=s[1]+1;j++) {
-                        if (i >= 0 && i < height && j >= 0 && j < width) {
-                            if (!visited[i][j]) {
+                        if (i >= 0 && i < height && j >= 0 && j < width) { // if that coordinate is in the matrix
+                            if (!visited[i][j]) { // If not visited yet
                                 visited[i][j] = true;
-                                if (arr[i][j] === Close && this.state.matrix[i][j] !== Mine) {
+                                if (arr[i][j] === Close && this.state.matrix[i][j] !== Mine) { // check if is a number or either empty cell
                                     arr[i][j] = Open;
                                     this.closeCells--;
-                                    if (this.state.matrix[i][j] === Empty)
+                                    if (this.state.matrix[i][j] === Empty) // if empty push to queue to check his linked cells
                                         queue.push([i, j]);
                                 }
                             }
@@ -232,7 +212,7 @@ class Board extends React.Component {
                 }
             }
         }
-        else{
+        else{ // if it's a number cell
             arr[row][column] = Open;
             this.closeCells--;
         }
@@ -243,7 +223,7 @@ class Board extends React.Component {
             <Cell
                 winStatus={this.state.win}
                 super={this.state.superMode}
-                state={this.state.states[row][column]}
+                position={this.state.position[row][column]}
                 value={this.state.matrix[row][column]}
                 onClick={(e) => this.handleClick(e,row,column)}
             />
@@ -272,8 +252,8 @@ class Board extends React.Component {
         return (
             <div className="game-board">
                 <div className="game-info">
-                    <span><img className="info-icon" src={stopwatch_icon}></img>  </span><Timer ref={(input) => { this.timer = input; }}/>
-                    <span><img className="info-icon" src={flag_icon}></img>  {this.state.flags} / {this.state.mines}</span>
+                    <span><img className="info-icon" src={stopwatch_icon}/>  </span><Timer ref={(input) => { this.timer = input; }}/>
+                    <span><img className="info-icon" src={flag_icon}/>  {this.state.flags} / {this.state.mines}</span>
                 </div>
                 <table className="matrix">
                     <tbody>
