@@ -2,6 +2,7 @@
   "name": "mine_sweeper",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://alukg.github.io/mine_sweeper",
   "dependencies": {
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
