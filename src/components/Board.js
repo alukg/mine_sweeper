@@ -5,7 +5,7 @@ import {isEqual} from "lodash";
 
 import Timer from './Timer';
 import Cell from './Cell';
-import {Mine,Flag,Open,Close,Empty} from '../constants/constants'
+import {Mine, Flag, Open, Close, Empty, Flags_Alert} from '../constants/constants'
 
 import flag_icon from '../images/flag.png';
 import stopwatch_icon from '../images/stopwatch.png';
@@ -102,7 +102,7 @@ class Board extends React.Component {
                 else {
                     states[row][column] = Flag;
                     if(isEqual(flags,this.state.mines)) {
-                        alert("You have reached the maximum number of flags.");
+                        alert(Flags_Alert);
                         return;
                     }
                     flags++;
