@@ -103,18 +103,20 @@ class Board extends React.Component {
                     flags--;
                 }
                 else {
-                    states[row][column] = Flag;
                     if(isEqual(flags,this.state.mines)) {
                         alert(Flags_Alert);
-                        return;
                     }
-                    flags++;
-                    if(this.checkIfWin(states,flags)) return;
+                    else {
+                        flags++;
+                        states[row][column] = Flag;
+                    }
                 }
-                this.setState({
-                    position: states,
-                    flags: flags
-                });
+                if(!this.checkIfWin(states,flags)) {
+                    this.setState({
+                        position: states,
+                        flags: flags
+                    });
+                }
             }
             else {
                 if (this.state.position[row][column] === Close) { // if the cell is closed
@@ -135,10 +137,11 @@ class Board extends React.Component {
                     }
                     else { // if non mine cell clicked
                         this.openCells(position, row, column);
-                        if(this.checkIfWin(position,this.state.flags)) return;
-                        this.setState({
-                            position: position,
-                        });
+                        if(!this.checkIfWin(position,this.state.flags)) {
+                            this.setState({
+                                position: position,
+                            });
+                        }
                     }
                 }
             }

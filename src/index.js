@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-import {isEqual} from "lodash";
+import {isEqual,toNumber} from "lodash";
 
 import InputBox from './components/InputBox';
 import Board from './components/Board';
@@ -19,17 +19,18 @@ class Game extends React.Component {
     }
 
     handleChangeValue(evt,num) {
+        let val = toNumber(evt.target.value);
         if(isEqual(num,2)){
-            if(evt.target.value<=Max_Mines && evt.target.value>=0) {
+            if(val<=Max_Mines && val>=0) {
                 const data = this.data.slice();
-                data[num] = evt.target.value;
+                data[num] = val;
                 this.data = data;
             }
         }
         else{
-            if(evt.target.value<=Max_Width_Height && evt.target.value>=0) {
+            if(val<=Max_Width_Height && val>=0) {
                 const data = this.data.slice();
-                data[num] = evt.target.value;
+                data[num] = val;
                 this.data = data;
             }
         }
