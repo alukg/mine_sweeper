@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-import 'lodash/isEqual';
+import {isEqual} from "lodash";
 
 import InputBox from './components/InputBox';
 import Board from './components/Board';
@@ -10,25 +10,35 @@ import './index.css';
 import './css/startButton.css'
 import './css/inputStyle.css'
 import superman_icon from './images/Superman.png';
+import {Max_Mines, Max_Width_Height, Too_Many_Mines_Alert} from "./constants/constants";
 
 class Game extends React.Component {
     constructor() {
         super();
-        this.data = [10,10,10]; //height,width,mines
+        this.data = [15,15,15]; //height,width,mines
     }
 
     handleChangeValue(evt,num) {
-        if(evt.target.value<=300 && evt.target.value>=0) {
-            const data = this.data.slice();
-            data[num] = evt.target.value;
-            this.data = data;
+        if(isEqual(num,2)){
+            if(evt.target.value<=Max_Mines && evt.target.value>=0) {
+                const data = this.data.slice();
+                data[num] = evt.target.value;
+                this.data = data;
+            }
+        }
+        else{
+            if(evt.target.value<=Max_Width_Height && evt.target.value>=0) {
+                const data = this.data.slice();
+                data[num] = evt.target.value;
+                this.data = data;
+            }
         }
     }
 
     renderInputBox(num,name) {
         return (
             <InputBox
-                name={name} onChange={(evt) => this.handleChangeValue(evt,num)}
+                name={name} num={num} onChange={(evt) => this.handleChangeValue(evt,num)}
             />
         );
     }
@@ -77,12 +87,19 @@ let $startButton = $(".centerMe");
 
 $startButton.click(function(){
     if($(this).hasClass("confirm")){
-        $(this).addClass("done");
-        $(".centerMe span").text("Starting");
-        setTimeout(function(){
-            $(".centerMe").removeClass("confirm").removeClass("done");
+        if($(".game-settings div:eq(3) span input").val() > $(".game-settings div:eq(4) span input").val()*$(".game-settings div:eq(5) span input").val()){
+            $(".centerMe").removeClass("confirm");
             $(".centerMe span").text("New Game");
-        }, 1200);
+            alert(Too_Many_Mines_Alert);
+        }
+        else{
+            $(this).addClass("done");
+            $(".centerMe span").text("Starting");
+            setTimeout(function(){
+                $(".centerMe").removeClass("confirm").removeClass("done");
+                $(".centerMe span").text("New Game");
+            }, 1200);
+        }
     } else if(!$(this).hasClass("done")) {
         $(this).addClass("confirm");
         $(".centerMe span").text("Are you sure?");

@@ -6,14 +6,19 @@ import {isEqual} from "lodash";
 import flag_icon from '../images/flag.png';
 import sea_mine from '../images/sea_mine.png';
 
-class Cell extends React.Component {
+class Cell extends React.PureComponent {
+
+    shouldComponentUpdate(nextProps, nextState){
+        return (!isEqual(nextProps.position, this.props.position) || !isEqual(nextProps.super,this.props.super) || !isEqual(nextProps.winStatus,this.props.winStatus));
+    }
+
     render() {
         let divClassName = "square";
         let value;
         if (this.props.super) { // if i'm on super mode
-            if (isEqual(this.props.value,Mine)) {
+            if (isEqual(this.props.value, Mine)) {
                 value = <img className="info-cell-icon" src={sea_mine}/>;
-                if (isEqual(this.props.position,Flag))
+                if (isEqual(this.props.position, Flag))
                     divClassName += " square-flag";
                 else
                     divClassName += " square-mine";
@@ -30,14 +35,14 @@ class Cell extends React.Component {
             }
         }
         else {
-            if (isEqual(this.props.position,Close))
+            if (isEqual(this.props.position, Close))
                 divClassName += " square-close";
-            else if (isEqual(this.props.position,Flag)) {
+            else if (isEqual(this.props.position, Flag)) {
                 divClassName += " square-flag";
                 value = <img className="info-cell-icon" src={flag_icon}/>;
             }
             else {
-                if (isEqual(this.props.value,Mine)) {
+                if (isEqual(this.props.value, Mine)) {
                     value = <img className="info-cell-icon" src={sea_mine}/>;
                     if (this.props.winStatus)
                         divClassName += " square-flag";
@@ -48,16 +53,14 @@ class Cell extends React.Component {
                     value = this.props.value;
                     divClassName += " square-number";
                 }
-
             }
         }
 
         let buttonClassName = divClassName + " square-button";
         let square = <div className={divClassName}>
-                        <button className={buttonClassName}
-                        onClick={this.props.onClick}>{value}</button>
-                    </div>;
-
+            <button className={buttonClassName}
+                    onClick={this.props.onClick}>{value}</button>
+        </div>;
         return (square);
     }
 }

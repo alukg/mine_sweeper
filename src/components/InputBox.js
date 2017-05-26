@@ -1,10 +1,14 @@
 import React from 'react';
 
+import {isEqual} from "lodash";
+import {Max_Mines, Max_Width_Height} from "../constants/constants";
+
 class InputBox extends React.Component{
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
-            val: 10
+            val: 15,
+            num: props.num
         };
     }
 
@@ -21,10 +25,18 @@ class InputBox extends React.Component{
 
     handleChangeValue(evt) {
         let value = evt.target.value;
-        if(value<=300 && value>=0) {
-            this.setState({
-                val: value
-            });
+        if(isEqual(this.state.num,2)){
+            if(value <= Max_Mines && value >= 0) {
+                this.setState({
+                    val: value
+                });
+            }
+        }else {
+            if (value <= Max_Width_Height && value >= 0) {
+                this.setState({
+                    val: value
+                });
+            }
         }
     }
 }

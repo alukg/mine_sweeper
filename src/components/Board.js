@@ -11,8 +11,8 @@ import flag_icon from '../images/flag.png';
 import stopwatch_icon from '../images/stopwatch.png';
 
 class Board extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             win: false,
             superMode: false,
@@ -37,49 +37,52 @@ class Board extends React.Component {
     startNewGame(data){
         let height = data[0];
         let width = data[1];
-        this.closeCells = height*width;
+        let mines = data[2];
+        this.closeCells = height * width;
 
         let newMatrix = [];
         let position = [];
-        for (let i=0;i<height;i++) {
+        for (let i = 0; i < height; i++) {
             newMatrix.push([]);
             position.push([]);
         }
 
-        for(let i=0;i<height;i++) // rows
-            for(let j=0;j<width;j++) { // columns
+        for (let i = 0; i < height; i++) // rows
+            for (let j = 0; j < width; j++) { // columns
                 newMatrix[i].push(Empty);
                 position[i].push(Close);
             }
 
 
-        let arr = Array.apply(null, {length: height*width}).map(Function.call, Number);
-        arr.sort( function() { return 0.5 - Math.random() } );
-        for(let i=0;i<data[2];i++)
+        let arr = Array.apply(null, {length: height * width}).map(Function.call, Number);
+        arr.sort(function () {
+            return 0.5 - Math.random()
+        });
+        for (let i = 0; i < mines; i++)
             newMatrix[Math.floor(arr[i] / width)][arr[i] % width] = Mine;
 
         let count;
-        for(let i=0;i<height;i++) { // rows
-            for(let j=0;j<width;j++) { // columns
+        for (let i = 0; i < height; i++) { // rows
+            for (let j = 0; j < width; j++) { // columns
                 count = 0;
                 if (newMatrix[i][j] !== Mine) {
-                    for(let row=i-1;row<=i+1;row++)
-                        for(let col=j-1;col<=j+1;col++)
-                            if((row!==i || col!==j) && row<height && col<width && row>=0 && col>=0 && newMatrix[row][col] === Mine)
+                    for (let row = i - 1; row <= i + 1; row++)
+                        for (let col = j - 1; col <= j + 1; col++)
+                            if ((row !== i || col !== j) && row < height && col < width && row >= 0 && col >= 0 && newMatrix[row][col] === Mine)
                                 count++;
-                    if(count !== 0)
+                    if (count !== 0)
                         newMatrix[i][j] = count;
                 }
             }
         }
-        $(function(){
-            if($(".super-mode").hasClass("on"))
+        $(function () {
+            if ($(".super-mode").hasClass("on"))
                 $(".super-mode").removeClass("on").addClass("off");
         });
         this.setState({
             win: false,
             superMode: false,
-            mines: data[2],
+            mines: mines,
             flags: 0,
             height: height,
             width: width,
