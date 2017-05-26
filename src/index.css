@@ -83,6 +83,7 @@ table{
     font-weight: bold;
     padding-bottom: 25px;
     background-color: #ffffff;
+    z-index: 999;
 }
 
 #headline {
