@@ -107,16 +107,6 @@ $startButton.click(function(){
     }
 });
 
-// Reset
-$startButton.on('mouseout', function(){
-    if($(this).hasClass("confirm")){
-        setTimeout(function(){
-            $(".centerMe").removeClass("confirm").removeClass("done");
-            $(".centerMe span").text("New Game");
-        }, 3000);
-    }
-});
-
 $(".super-mode").click(function () {
     if($(this).hasClass("off"))
         $(this).removeClass("off").addClass("on");
