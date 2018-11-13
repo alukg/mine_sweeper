@@ -115,6 +115,7 @@ $startButton.on('mouseout', function(){
         setTimeout(function(){
             $(".centerMe").removeClass("confirm").removeClass("done");
             $(".centerMe span").text("New Game");
+			//***********************
         }, 3000);
     }
 });
