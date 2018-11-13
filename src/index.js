@@ -107,6 +107,8 @@ $startButton.click(function(){
     }
 });
 
+//***********************
+
 // Reset
 $startButton.on('mouseout', function(){
     if($(this).hasClass("confirm")){
